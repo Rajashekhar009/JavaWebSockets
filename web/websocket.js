@@ -89,22 +89,15 @@ function funGetDetails(strData) {
 function WebSocketTest() {
 
     if ("WebSocket" in window) {
-       alert("WebSocket is supported by your Browser!");
-
        // Let us open a web socket
        var ws = new WebSocket("ws://localhost:8084/JavaAssignment/actions");
 
-       ws.onopen = function() {
-          alert("onopen");
+       ws.onopen = function() {          
           ws.send("");
-          alert("Message is sent...");
        };
 
-       ws.onmessage = function (evt) { 
-           alert("Message is received..."+evt.data);
-           //received_msg = evt.data;   
-           var dynData = evt.data.replace("'","\"");
-           funGetDetails(dynData);
+       ws.onmessage = function (evt) {    
+           funGetDetails(evt.data);
        };
 
        ws.onclose = function() {                  

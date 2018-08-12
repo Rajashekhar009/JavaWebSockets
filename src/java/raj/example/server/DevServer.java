@@ -6,73 +6,39 @@ import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
-import javax.enterprise.context.ApplicationScoped;
+//import javax.enterprise.context.ApplicationScoped;
 
 import javax.websocket.server.ServerEndpoint;
-import javax.inject.Inject;
+//import javax.inject.Inject;
 
-import java.io.StringReader;
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
+//import java.io.StringReader;
+//import javax.json.Json;
+//import javax.json.JsonObject;
+//import javax.json.JsonReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import raj.example.test.Device;
 
-//@ApplicationScoped
 @ServerEndpoint("/actions")
 public class DevServer {
     
     private Session session;
-    public String dynData =  "{'data': [{'ID': 'Cat1','Ttl': 'Electronics','Desc': 'Electronics - Description'},{'ID': 'Cat2','Ttl': 'Appliances','Desc': 'Appliances - Description'},{'ID': 'Cat3','Ttl': 'Baby-Kids','Desc': 'Baby-Kids - Description'},{'ID': 'Cat4','Ttl': 'Home-Furnitur','Desc': 'Home-Furnitur - Description'},{'ID': 'Cat5','Ttl': 'Books','Desc': 'Books - Description'},{'ID': 'Cat6','Ttl': 'Gaming-Accessories','Desc': 'Gaming-Accessories - Description'}]}";
-    //@Inject
-    //private SessionHandler sessionHandler;
-    
+    public String dynData =  "{\"data\": [{\"ID\": \"Cat1\",\"Ttl\": \"Electronics\",\"Desc\": \"Electronics - Description\", \"SubCatData\": []},{\"ID\": \"Cat2\",\"Ttl\": \"Appliances\",\"Desc\": \"Appliances - Description\",\"SubCatData\": [{\"ID\": \"SubCat1\",\"Ttl\": \"Washing Machines\",\"Desc\": \"Washing Machines - Description\"},{\"ID\": \"SubCat2\",\"Ttl\": \"Televisions\",\"Desc\": \"Televisions - Description\", \"SubCatItemsData\": [{\"ID\": \"SubCatItem1\",\"Ttl\": \"Sony\",\"Desc\": \"Sony - Description\"},{\"ID\": \"SubCatItem2\",\"Ttl\": \"Samsung\",\"Desc\": \"Samsung - Description\"},{\"ID\": \"SubCatItem2\",\"Ttl\": \"Hisense\",\"Desc\": \"Hisense - Description\"},{\"ID\": \"SubCatItem2\",\"Ttl\": \"LG\",\"Desc\": \"LG - Description\"}]},{\"ID\": \"SubCat3\",\"Ttl\": \"Refrigerators\",\"Desc\": \"Refrigerators - Description\"},{\"ID\": \"SubCat4\",\"Ttl\": \"Air conditioners\",\"Desc\": \"Air conditioners - Description\"},{\"ID\": \"SubCat5\",\"Ttl\": \"Small home appliances\",\"Desc\": \"Small home appliances - Description\"},{\"ID\": \"SubCat6\",\"Ttl\": \"Health care appliances\",\"Desc\": \"Health care appliances - Description\"}]},{\"ID\": \"Cat3\",\"Ttl\": \"Baby-Kids\",\"Desc\": \"Baby-Kids - Description\", \"SubCatData\": []},{\"ID\": \"Cat4\",\"Ttl\": \"Home-Furnitur\",\"Desc\": \"Home-Furnitur - Description\", \"SubCatData\": []},{\"ID\": \"Cat5\",\"Ttl\": \"Books\",\"Desc\": \"Books - Description\", \"SubCatData\": []},{\"ID\": \"Cat6\",\"Ttl\": \"Gaming-Accessories\",\"Desc\": \"Gaming-Accessories - Description\", \"SubCatData\": []}]}";
+        
     @OnOpen
     public void open(Session session) {
         this.session = session;
         System.out.println("raj.example.server.DevServer.open()");
-        //sessionHandler.addSession(session);
     }
 
     @OnClose
     public void close(Session session) {
-        System.out.println("raj.example.server.DevServer.close()");
-        //sessionHandler.removeSession(session);
+        System.out.println("raj.example.server.DevServer.close()");        
     }
 
     @OnError
     public void onError(Throwable error) {
         Logger.getLogger(DevServer.class.getName()).log(Level.SEVERE, null, error);
     }
-/*
-    @OnMessage
-    public void handleMessage(String message, Session session) {
-        try (JsonReader reader = Json.createReader(new StringReader(message))) 
-        {
-            JsonObject jsonMessage = reader.readObject();
-            System.out.println("received message from client " + jsonMessage);
-            if ("add".equals(jsonMessage.getString("action"))) {
-                Device device = new Device();
-                device.setName(jsonMessage.getString("name"));
-                device.setDescription(jsonMessage.getString("description"));
-                device.setType(jsonMessage.getString("type"));
-                device.setStatus("On");
-                sessionHandler.addDevice(device);
-            }
-
-            if ("remove".equals(jsonMessage.getString("action"))) {
-                int id = (int) jsonMessage.getInt("id");
-                sessionHandler.removeDevice(id);
-            }
-
-            if ("toggle".equals(jsonMessage.getString("action"))) {
-                int id = (int) jsonMessage.getInt("id");
-                sessionHandler.toggleDevice(id);
-            }
-        }
-    }
-*/
     
     @OnMessage
     public void OnMessage(String message){
@@ -80,10 +46,10 @@ public class DevServer {
         
         if(this.session!=null && this.session.isOpen()){
             try{
-                this.session.getBasicRemote().sendText("From Server:"+dynData);                
+                this.session.getBasicRemote().sendText(dynData);                
             }
             catch(IOException ie){
-                Logger.getLogger(HelloEndpoint.class.getName()).log(Level.SEVERE,"Server Error is here");
+                Logger.getLogger(DevServer.class.getName()).log(Level.SEVERE,"Server Error is here");
             }
         }
     }
